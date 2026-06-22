@@ -28,9 +28,23 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// 1. GET /tasks -> returns all tasks as a JSON array
-app.MapGet("/tasks", async (TaskDbContext db) =>
-    await db.Tasks.ToListAsync());
+// 1. GET /tasks -> returns tasks with optional filtering by completed status and priority
+app.MapGet("/tasks", async (bool? completed, Priority? priority, TaskDbContext db) =>
+{
+    var query = db.Tasks.AsQueryable();
+
+    if (completed.HasValue)
+    {
+        query = query.Where(t => t.IsCompleted == completed.Value);
+    }
+
+    if (priority.HasValue)
+    {
+        query = query.Where(t => t.Priority == priority.Value);
+    }
+
+    return await query.ToListAsync();
+});
 
 // 2. GET /tasks/{id} -> returns one task; returns HTTP 404 with error body if id doesn't exist
 app.MapGet("/tasks/{id:int}", async (int id, TaskDbContext db) =>
