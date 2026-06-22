@@ -28,8 +28,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// 1. GET /tasks -> returns tasks with optional filtering by completed status and priority
-app.MapGet("/tasks", async (bool? completed, Priority? priority, TaskDbContext db) =>
+// 1. GET /tasks -> returns tasks with optional filtering and pagination
+app.MapGet("/tasks", async (bool? completed, Priority? priority, int? page, int? pageSize, TaskDbContext db) =>
 {
     var query = db.Tasks.AsQueryable();
 
@@ -41,6 +41,12 @@ app.MapGet("/tasks", async (bool? completed, Priority? priority, TaskDbContext d
     if (priority.HasValue)
     {
         query = query.Where(t => t.Priority == priority.Value);
+    }
+
+    // Apply pagination if parameters are provided
+    if (page.HasValue && pageSize.HasValue && page.Value > 0 && pageSize.Value > 0)
+    {
+        query = query.Skip((page.Value - 1) * pageSize.Value).Take(pageSize.Value);
     }
 
     return await query.ToListAsync();

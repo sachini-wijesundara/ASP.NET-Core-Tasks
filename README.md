@@ -51,10 +51,14 @@ curl -X POST http://localhost:5147/tasks \
   }'
 ```
 
-### 2. Get All Tasks with Filtering (GET)
-Returns all tasks. Supports optional filtering by `completed` and `priority` query parameters.
+### 2. Get All Tasks with Filtering & Pagination (GET)
+Returns all tasks. Supports optional filtering by `completed` and `priority` query parameters, as well as pagination using `page` and `pageSize`.
 ```bash
+# Retrieve tasks with filters
 curl "http://localhost:5147/tasks?completed=false&priority=Medium"
+
+# Retrieve tasks with pagination (page 1, size 10)
+curl "http://localhost:5147/tasks?page=1&pageSize=10"
 ```
 
 ### 3. Update a Task (PUT)
