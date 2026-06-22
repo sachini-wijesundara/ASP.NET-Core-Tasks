@@ -23,5 +23,8 @@ namespace ASP.NET_Core_Tasks.Models
         [Required(ErrorMessage = "Priority is required.")]
         [EnumDataType(typeof(Priority))]
         public Priority Priority { get; set; }
+
+        [Required]
+        public int UserId { get; set; }
     }
 }

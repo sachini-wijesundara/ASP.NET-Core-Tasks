@@ -11,5 +11,6 @@ namespace ASP.NET_Core_Tasks.Data
         }
 
         public DbSet<Task> Tasks => Set<Task>();
+        public DbSet<User> Users => Set<User>();
     }
 }
